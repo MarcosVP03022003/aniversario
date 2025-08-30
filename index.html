@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Feliz Aniversário</title>
+  <style>
+    :root{
+      --bg1:#ff9a9e; --bg2:#fad0c4; --bg3:#fbc2eb; --bg4:#a6c1ee;
+      --card: rgba(0,0,0,.45);
+    }
+
+    /* Fundo com gradiente animado */
+    body{
+      margin:0;
+      font-family: Arial, Helvetica, sans-serif;
+      color:#fff;
+      min-height:100svh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      background: linear-gradient(135deg,var(--bg1),var(--bg2),var(--bg3),var(--bg4));
+      background-size: 300% 300%;
+      animation: gradientShift 14s ease-in-out infinite;
+      overflow-x:hidden;
+    }
+    @keyframes gradientShift{
+      0%{ background-position: 0% 50%; }
+      50%{ background-position: 100% 50%; }
+      100%{ background-position: 0% 50%; }
+    }
+
+    .container{
+      width:min(100%, 980px);
+      background: var(--card);
+      padding: 28px;
+      border-radius: 22px;
+      box-shadow: 0 8px 20px rgba(0,0,0,.45);
+      backdrop-filter: blur(2px);
+    }
+
+    h1{
+      font-size: clamp(26px, 4vw, 44px);
+      margin: 0 0 8px;
+      animation: pulse 2.2s infinite;
+    }
+    @keyframes pulse{
+      0%{ transform: scale(1); }
+      50%{ transform: scale(1.04); }
+      100%{ transform: scale(1); }
+    }
+
+    p.lead{
+      font-size: clamp(16px, 2.2vw, 20px);
+      margin: 0 0 18px;
+      opacity:.95;
+    }
+
+    .btn{
+      padding: 12px 22px;
+      background:#ffeb3b;
+      color:#000;
+      border:0;
+      border-radius:12px;
+      font-weight:700;
+      cursor:pointer;
+      transition: transform .25s, filter .25s;
+    }
+    .btn:hover{ transform: scale(1.06); filter: brightness(1.05); }
+
+    /* Galeria: fotos grandes e iguais */
+    .fotos{
+      display:none;           /* aparece ao clicar */
+      margin-top: 22px;
+      gap:16px;
+      /* grade responsiva: 2–3 colunas */
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .fotos img{
+      width:100%;
+      /* todas IGUAIS */
+      aspect-ratio: 1 / 1;        /* mude para 4/3 ou 3/4 se preferir */
+      object-fit: cover;
+      border-radius:16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,.5);
+      user-select:none;
+      -webkit-user-drag:none;
+    }
+
+    /* Confete */
+    .confete{
+      position: fixed;
+      top:-10px;
+      width:10px; height:16px;
+      background: var(--c);
+      left: var(--x);
+      opacity:.9;
+      transform: rotate(var(--r));
+      animation: cair var(--dur) linear var(--delay) forwards;
+      pointer-events:none;
+      z-index: 5;
+    }
+    @keyframes cair{
+      to{
+        transform: translate3d(0, 110vh, 0) rotate(calc(var(--r) + 1.2turn));
+        opacity:1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Para o Meu Melhor Amigo Favian: Feliz Aniversário! 🎂</h1>
+    <p class="lead">Que seu dia seja cheio de alegria, amor e muitas conquistas!</p>
+    <button class="btn" onclick="abrirSurpresa()">Abrir Surpresa 🎁</button>
+
+    <!-- Galeria de fotos -->
+    <div class="fotos" id="fotos" style="display:none">
+      <!-- Troque os caminhos abaixo pelos seus arquivos -->
+      <img src="favian2.png" alt="Favian 1">
+      <img src="favian.jpg"  alt="Favian 2">
+      <img src="dayz.jpg"    alt="DAYZ">
+    </div>
+
+    <!-- Mensagem especial (opcional) -->
+    <p class="lead" id="mensagem" style="display:none; margin-top:18px;">
+      Hoje não é só o seu aniversário: é o dia de celebrar a sorte de ter encontrado um amigo que virou irmão.
+      E pensar que tudo isso aconteceu por causa do <strong>DayZ</strong>… Obrigado por tudo! 🎮❤️
+    </p>
+  </div>
+
+  <script>
+    function abrirSurpresa(){
+      // mostra fotos + texto
+      const galeria = document.getElementById('fotos');
+      const msg     = document.getElementById('mensagem');
+      galeria.style.display = 'grid';
+      msg.style.display = 'block';
+
+      // solta confete
+      soltarConfete(140);
+
+      // rola até a galeria (caso esteja fora da tela)
+      galeria.scrollIntoView({behavior:'smooth', block:'center'});
+    }
+
+    function soltarConfete(qtd=120){
+      const cores = ['#ffeb3b','#ff6f61','#4dd0e1','#81c784','#ce93d8','#ff8a65'];
+      for(let i=0;i<qtd;i++){
+        const s = document.createElement('span');
+        s.className = 'confete';
+        s.style.setProperty('--x', Math.random()*100 + 'vw');
+        s.style.setProperty('--c', cores[Math.floor(Math.random()*cores.length)]);
+        s.style.setProperty('--r', (Math.random()*360)+'deg');
+        s.style.setProperty('--dur', (6 + Math.random()*4) + 's');
+        s.style.setProperty('--delay', (Math.random()*0.8) + 's');
+        document.body.appendChild(s);
+        // remove depois que cai
+        s.addEventListener('animationend', ()=> s.remove());
+      }
+    }
+  </script>
+</body>
+
+</html>
